@@ -1,220 +1,319 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const formSection = document.getElementById('formSection');
-    const resultSection = document.getElementById('resultSection');
-    const flowerForm = document.getElementById('flowerForm');
-    const backBtn = document.getElementById('backBtn');
-    const generateBtn = document.getElementById('generateBtn');
-
-    const nameInput = document.getElementById('nameInput');
-    const flowerType = document.getElementById('flowerType');
-    const flowerColor = document.getElementById('flowerColor');
-    const flowerPetals = document.getElementById('flowerPetals');
-    const flowerAdjective = document.getElementById('flowerAdjective');
-    const flowerEffect = document.getElementById('flowerEffect');
-    const flowerMessage = document.getElementById('flowerMessage');
-    const flowerId = document.getElementById('flowerId');
-    const compatibilityBar = document.getElementById('compatibilityBar');
-    const compatibilityPercent = document.getElementById('compatibilityPercent');
-    const compatibilityText = document.getElementById('compatibilityText');
-    const successMessage = document.getElementById('successMessage');
-    const shareBtn = document.getElementById('shareBtn');
-    const saveBtn = document.getElementById('saveBtn');
-
-    const colorClasses = {
-        "Rouge": "flower-red",
-        "Rose": "flower-pink",
-        "Blanc": "flower-white",
-        "Jaune": "flower-yellow",
-        "Violet": "flower-purple",
-        "Orange": "flower-orange",
-        "Bleu": "flower-blue",
-        "Multicolore": "flower-multi"
+    // Éléments DOM
+    const elements = {
+        formSection: document.getElementById('formSection'),
+        resultSection: document.getElementById('resultSection'),
+        flowerForm: document.getElementById('flowerForm'),
+        backBtn: document.getElementById('backBtn'),
+        generateBtn: document.getElementById('generateBtn'),
+        nameInput: document.getElementById('nameInput'),
+        flowerType: document.getElementById('flowerType'),
+        flowerColor: document.getElementById('flowerColor'),
+        flowerPetals: document.getElementById('flowerPetals'),
+        flowerAdjective: document.getElementById('flowerAdjective'),
+        flowerEffect: document.getElementById('flowerEffect'),
+        flowerMessage: document.getElementById('flowerMessage'),
+        flowerId: document.getElementById('flowerId'),
+        compatibilityBar: document.getElementById('compatibilityBar'),
+        compatibilityPercent: document.getElementById('compatibilityPercent'),
+        compatibilityText: document.getElementById('compatibilityText'),
+        successMessage: document.getElementById('successMessage'),
+        downloadImageBtn: document.getElementById('downloadImageBtn'),
+        downloadPdfBtn: document.getElementById('downloadPdfBtn'),
+        flowerContainer: document.getElementById('flowerContainer')
     };
 
-    const compatibilityMessages = {
-        95: "une connexion magique et éternelle",
-        85: "une relation profonde et sincère",
-        75: "une belle harmonie",
-        65: "une attirance naturelle"
-    };
+    let currentFlower = null;
 
-    flowerForm.addEventListener('submit', async function (e) {
+    // Événements
+    initializeEvents();
+
+    function initializeEvents() {
+        elements.flowerForm.addEventListener('submit', handleFormSubmit);
+        elements.backBtn.addEventListener('click', handleBackClick);
+        elements.downloadImageBtn.addEventListener('click', handleImageDownload);
+        elements.downloadPdfBtn.addEventListener('click', handlePdfDownload);
+
+        // Focus sur l'input au chargement
+        elements.nameInput.focus();
+    }
+
+    async function handleFormSubmit(e) {
         e.preventDefault();
 
-        const name = nameInput.value.trim() || "Mon Amour";
-
-        generateBtn.disabled = true;
-        generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Génération en cours...';
+        const name = elements.nameInput.value.trim() || "Mon Amour";
+        elements.generateBtn.disabled = true;
+        elements.generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Génération en cours...';
 
         try {
-            const response = await fetch('/api/generate_flower', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name: name })
-            });
-
-            const flower = await response.json();
+            const flower = await generateFlower(name);
+            currentFlower = flower;
 
             updateFlowerDisplay(flower);
 
+            // Transition vers la section résultats
             setTimeout(() => {
-                formSection.classList.add('hidden');
-                resultSection.classList.remove('hidden');
-                resultSection.classList.add('animate-fadeIn');
-
-                generateBtn.disabled = false;
-                generateBtn.innerHTML = '<i class="fas fa-magic mr-2"></i> 🌸 Faire pousser une fleur magique 🌸';
-
-                successMessage.classList.remove('hidden');
-                setTimeout(() => {
-                    successMessage.classList.add('hidden');
-                }, 3000);
-
+                switchToResultSection();
+                showSuccessMessage();
                 createConfetti();
             }, 500);
 
         } catch (error) {
             console.error('Erreur:', error);
-            generateBtn.disabled = false;
-            generateBtn.innerHTML = '<i class="fas fa-magic mr-2"></i> 🌸 Faire pousser une fleur magique 🌸';
             alert("Une erreur s'est produite. Veuillez réessayer.");
+        } finally {
+            elements.generateBtn.disabled = false;
+            elements.generateBtn.innerHTML = '<i class="fas fa-magic"></i> 🌸 Faire pousser une fleur magique 🌸';
         }
-    });
-
-    backBtn.addEventListener('click', function () {
-        resultSection.classList.add('hidden');
-        formSection.classList.remove('hidden');
-        formSection.classList.add('animate-fadeIn');
-
-        nameInput.value = '';
-        nameInput.focus();
-    });
-
-    shareBtn.addEventListener('click', function () {
-        const message = `🌸 J'ai créé une fleur magique pour toi ! ${flowerMessage.textContent} 🌸`;
-
-        if (navigator.share) {
-            navigator.share({
-                title: 'Ma Fleur Magique d\'Amour',
-                text: message,
-                url: window.location.href
-            });
-        } else {
-            navigator.clipboard.writeText(message).then(() => {
-                const originalText = shareBtn.innerHTML;
-                shareBtn.innerHTML = '<i class="fas fa-check"></i> Copié !';
-                setTimeout(() => {
-                    shareBtn.innerHTML = originalText;
-                }, 2000);
-            });
-        }
-    });
-
-    saveBtn.addEventListener('click', function () {
-        const originalText = saveBtn.innerHTML;
-        saveBtn.innerHTML = '<i class="fas fa-check"></i> Sauvegardé !';
-
-        setTimeout(() => {
-            saveBtn.innerHTML = originalText;
-        }, 2000);
-    });
-
-    function updateFlowerDisplay(flower) {
-        flowerType.textContent = flower.type;
-        flowerColor.textContent = flower.color;
-        flowerPetals.textContent = flower.petals;
-        flowerAdjective.textContent = flower.adjective;
-        flowerEffect.textContent = flower.effect;
-        flowerMessage.textContent = flower.message;
-        flowerId.textContent = flower.unique_id;
-
-        compatibilityPercent.textContent = flower.compatibility;
-        compatibilityBar.style.width = `${flower.compatibility}%`;
-
-        let compMessage = "une belle connexion";
-        if (flower.compatibility >= 95) compMessage = "une connexion magique et éternelle";
-        else if (flower.compatibility >= 85) compMessage = "une relation profonde et sincère";
-        else if (flower.compatibility >= 75) compMessage = "une belle harmonie";
-        compatibilityText.textContent = compMessage;
-
-        createPetals(flower);
     }
 
-    function createPetals(flower) {
-        const petalsContainer = document.getElementById('petalsContainer');
-        petalsContainer.innerHTML = '';
+    async function generateFlower(name) {
+        const response = await fetch('/api/generate_flower', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name })
+        });
+
+        if (!response.ok) throw new Error('Network response was not ok');
+        return await response.json();
+    }
+
+    function updateFlowerDisplay(flower) {
+        // Mettre à jour les textes
+        elements.flowerType.textContent = flower.type;
+        elements.flowerColor.textContent = flower.color;
+        elements.flowerPetals.textContent = flower.petals;
+        elements.flowerAdjective.textContent = flower.adjective;
+        elements.flowerEffect.textContent = flower.effect;
+        elements.flowerMessage.textContent = flower.message;
+        elements.flowerId.textContent = flower.unique_id;
+
+        // Compatibilité
+        elements.compatibilityPercent.textContent = flower.compatibility;
+        elements.compatibilityBar.style.width = `${flower.compatibility}%`;
+        elements.compatibilityText.textContent = getCompatibilityText(flower.compatibility);
+
+        // Créer la fleur visuelle
+        createRealisticFlower(flower);
+    }
+
+    function getCompatibilityText(percent) {
+        if (percent >= 95) return "une connexion magique et éternelle";
+        if (percent >= 85) return "une relation profonde et sincère";
+        if (percent >= 75) return "une belle harmonie";
+        return "une belle connexion";
+    }
+
+    function createRealisticFlower(flower) {
+        elements.flowerContainer.innerHTML = '';
 
         const petalCount = flower.petals;
-        const colorClass = colorClasses[flower.color] || 'flower-red';
+        const color = flower.color_hex;
+        const isMulticolor = flower.color === "Multicolore";
 
+        // Créer la fleur
+        const flowerDiv = document.createElement('div');
+        flowerDiv.className = 'flower-animated';
+
+        // Pétales
         for (let i = 0; i < petalCount; i++) {
             const petal = document.createElement('div');
-            petal.className = `absolute ${colorClass} rounded-full`;
-            petal.style.width = '60px';
-            petal.style.height = '100px';
-            petal.style.opacity = '0.9';
-            petal.style.filter = 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))';
+            petal.className = 'flower-petal';
 
+            // Position et rotation
             const angle = (i / petalCount) * 360;
-            const radius = 80; // Rayon du cercle
-            const x = radius * Math.cos(angle * Math.PI / 180);
-            const y = radius * Math.sin(angle * Math.PI / 180);
+            const radius = 80;
+            const x = Math.cos(angle * Math.PI / 180) * radius;
+            const y = Math.sin(angle * Math.PI / 180) * radius;
 
-            petal.style.left = `calc(50% + ${x}px - 30px)`;
-            petal.style.top = `calc(50% + ${y}px - 50px)`;
-            petal.style.transform = `rotate(${angle}deg)`;
-            petal.style.transformOrigin = 'bottom center';
+            // Style
+            petal.style.transform = `translate(${x}px, ${y}px) rotate(${angle + 90}deg)`;
 
-            petal.style.animation = `float ${3 + i * 0.2}s ease-in-out infinite`;
-            petal.style.animationDelay = `${i * 0.1}s`;
+            // Couleur
+            if (isMulticolor) {
+                const hue = (i * 30) % 360;
+                petal.style.background = `linear-gradient(135deg, hsl(${hue}, 100%, 65%), hsl(${hue + 20}, 100%, 55%))`;
+            } else {
+                petal.style.background = color;
+            }
 
-            petalsContainer.appendChild(petal);
+            flowerDiv.appendChild(petal);
         }
 
-        const flowerCenter = document.getElementById('flowerCenter');
-        flowerCenter.style.animation = 'pulse-heart 2s ease-in-out infinite';
+        // Centre de la fleur
+        const center = document.createElement('div');
+        center.className = 'flower-center';
+        flowerDiv.appendChild(center);
 
-        if (flower.color === "Multicolore") {
-            petalsContainer.style.animation = 'spin-petal 10s linear infinite';
+        elements.flowerContainer.appendChild(flowerDiv);
+
+        // Ajouter des styles CSS dynamiques
+        addFlowerStyles();
+    }
+
+    function addFlowerStyles() {
+        const style = document.createElement('style');
+        style.textContent = `
+            .flower-animated {
+                position: relative;
+                width: 200px;
+                height: 200px;
+                animation: float 3s ease-in-out infinite;
+            }
+            
+            .flower-petal {
+                position: absolute;
+                width: 40px;
+                height: 80px;
+                border-radius: 50%;
+                top: 50%;
+                left: 50%;
+                margin: -40px 0 0 -20px;
+                animation: pulse-heart 2s ease-in-out infinite;
+                animation-delay: calc(var(--i, 0) * 0.1s);
+            }
+            
+            .flower-center {
+                position: absolute;
+                width: 50px;
+                height: 50px;
+                background: radial-gradient(circle, #ffd700, #ffaa00);
+                border-radius: 50%;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                animation: pulse-heart 1.5s ease-in-out infinite;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    function handleBackClick() {
+        elements.resultSection.classList.add('hidden');
+        elements.formSection.classList.remove('hidden');
+        elements.formSection.classList.add('active');
+        elements.nameInput.value = '';
+        elements.nameInput.focus();
+    }
+
+    async function handleImageDownload() {
+        if (!currentFlower) {
+            alert("Veuillez d'abord générer une fleur.");
+            return;
         }
+
+        const originalText = elements.downloadImageBtn.innerHTML;
+        elements.downloadImageBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Génération...';
+
+        try {
+            const response = await fetch('/api/download_card', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(currentFlower)
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `fleur_magique_${currentFlower.unique_id}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            } else {
+                throw new Error('Download failed');
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+            alert("Erreur lors du téléchargement.");
+        } finally {
+            elements.downloadImageBtn.innerHTML = originalText;
+        }
+    }
+
+    async function handlePdfDownload() {
+        if (!currentFlower) {
+            alert("Veuillez d'abord générer une fleur.");
+            return;
+        }
+
+        const originalText = elements.downloadPdfBtn.innerHTML;
+        elements.downloadPdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Préparation...';
+
+        try {
+            // Utiliser html2canvas pour capturer la section
+            const canvas = await html2canvas(elements.resultSection, {
+                scale: 2,
+                backgroundColor: null,
+                useCORS: true
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+            const imgWidth = 190;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+            pdf.save(`fleur_magique_${currentFlower.unique_id}.pdf`);
+
+        } catch (error) {
+            console.error('Erreur:', error);
+            alert("Impossible de générer le PDF. Veuillez réessayer.");
+        } finally {
+            elements.downloadPdfBtn.innerHTML = originalText;
+        }
+    }
+
+    function switchToResultSection() {
+        elements.formSection.classList.remove('active');
+        elements.resultSection.classList.remove('hidden');
+        elements.resultSection.classList.add('active');
+    }
+
+    function showSuccessMessage() {
+        elements.successMessage.classList.remove('hidden');
+        setTimeout(() => {
+            elements.successMessage.classList.add('hidden');
+        }, 3000);
     }
 
     function createConfetti() {
         const emojis = ['💖', '🌸', '🌷', '🌹', '💐', '✨', '🥰', '😍', '💝', '🎀'];
-        const colors = ['text-rose-400', 'text-pink-400', 'text-purple-400', 'text-yellow-400'];
 
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < 20; i++) {
             const confetti = document.createElement('div');
-            confetti.className = `fixed text-2xl pointer-events-none z-50 ${colors[Math.floor(Math.random() * colors.length)]}`;
+            confetti.className = 'confetti';
             confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
             confetti.style.left = Math.random() * 100 + 'vw';
             confetti.style.top = '-30px';
-            confetti.style.opacity = '0.8';
 
             document.body.appendChild(confetti);
 
-            const duration = 2 + Math.random() * 2;
-            const endX = (Math.random() - 0.5) * 200;
-
+            // Animation
+            const duration = 2 + Math.random();
             confetti.animate([
-                {
-                    transform: 'translate(0, 0) rotate(0deg)',
-                    opacity: 0.8
-                },
-                {
-                    transform: `translate(${endX}px, ${window.innerHeight}px) rotate(${720}deg)`,
-                    opacity: 0
-                }
+                { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                { transform: `translateY(100vh) rotate(${360}deg)`, opacity: 0 }
             ], {
                 duration: duration * 1000,
-                easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
+                easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
             });
 
             setTimeout(() => confetti.remove(), duration * 1000);
         }
     }
 
-    nameInput.focus();
+    // Ajouter le style pour les confettis
+    const confettiStyle = document.createElement('style');
+    confettiStyle.textContent = `
+        .confetti {
+            position: fixed;
+            font-size: 1.5rem;
+            pointer-events: none;
+            z-index: 1000;
+        }
+    `;
+    document.head.appendChild(confettiStyle);
 });
