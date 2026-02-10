@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleur Automatique - Saint-Valentin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-heart"></i> Fleur Magique de la Saint-Valentin <i class="fas fa-heart"></i></h1>
+            <p class="subtitle">Générez une fleur unique et envoyez un message d'amour</p>
+        </header>
+
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="flower-display" id="flowerDisplay">
+                    <!-- La fleur sera générée ici dynamiquement -->
+                    <div class="flower" id="flower">
+                        <div class="flower-center"></div>
+                        <div class="petals">
+                            <!-- Les pétales seront ajoutés par JavaScript -->
+                        </div>
+                        <div class="stem"></div>
+                        <div class="leaf leaf-left"></div>
+                        <div class="leaf leaf-right"></div>
+                    </div>
+                </div>
+
+                <div class="flower-info" id="flowerInfo">
+                    <h3><i class="fas fa-info-circle"></i> Caractéristiques de votre fleur</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">Type:</span>
+                            <span id="flowerType" class="value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Couleur:</span>
+                            <span id="flowerColor" class="value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Pétales:</span>
+                            <span id="flowerPetals" class="value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Taille:</span>
+                            <span id="flowerSize" class="value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Parfum:</span>
+                            <span id="flowerScent" class="value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Effet spécial:</span>
+                            <span id="flowerEffect" class="value">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="control-panel">
+                    <h3><i class="fas fa-magic"></i> Générer une fleur</h3>
+                    <p>Créez une fleur unique avec un message d'amour personnalisé</p>
+                    <button id="generateBtn" class="btn generate-btn">
+                        <i class="fas fa-seedling"></i> Faire pousser une fleur
+                    </button>
+
+                    <div class="message-box">
+                        <h3><i class="fas fa-envelope"></i> Message d'amour</h3>
+                        <div id="messageDisplay" class="message-display">
+                            Cliquez sur "Faire pousser une fleur" pour générer un message d'amour
+                        </div>
+                        <div id="quoteDisplay" class="quote-display"></div>
+                    </div>
+
+                    <div class="love-poem">
+                        <h3><i class="fas fa-feather-alt"></i> Poème d'amour</h3>
+                        <div id="poemDisplay" class="poem-display">
+                            <button id="generatePoemBtn" class="btn poem-btn">
+                                <i class="fas fa-pen-fancy"></i> Générer un poème
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="send-message">
+                    <h3><i class="fas fa-paper-plane"></i> Envoyer un message</h3>
+                    <div class="form-group">
+                        <input type="text" id="senderName" placeholder="Votre nom" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <textarea id="loveMessage" placeholder="Écrivez votre message d'amour ici..."
+                            class="form-textarea"></textarea>
+                    </div>
+                    <button id="sendMessageBtn" class="btn send-btn">
+                        <i class="fas fa-heart"></i> Envoyer avec amour
+                    </button>
+                    <div id="messageResponse" class="response-message"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="valentine-info">
+            <h3><i class="fas fa-gift"></i> À propos de la Saint-Valentin</h3>
+            <div id="valentineFacts" class="facts-container">
+                <!-- Les faits seront chargés dynamiquement -->
+            </div>
+            <button id="loadInfoBtn" class="btn info-btn">
+                <i class="fas fa-info"></i> Voir les traditions
+            </button>
+        </div>
+
+        <footer>
+            <p>❤️ Créé avec amour pour la Saint-Valentin ❤️</p>
+            <p class="footer-note">Cette application génère des fleurs uniques et des messages d'amour. Déployez-la sur
+                Render.com pour la partager avec vos proches!</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
