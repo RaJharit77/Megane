@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request # type: ignore
 import random
 from datetime import datetime
 import json
