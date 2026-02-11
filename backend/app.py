@@ -1,5 +1,6 @@
 import math
 from flask import Flask, render_template, jsonify, request, send_file, Response # type: ignore
+from flask_cors import CORS # type: ignore
 import random
 import os
 from datetime import datetime
@@ -9,6 +10,7 @@ import base64
 import numpy as np
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
+CORS(app)
 
 # Messages d'amour améliorés
 FLOWER_MESSAGES = [

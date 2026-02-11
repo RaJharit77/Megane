@@ -13,6 +13,9 @@ body {
   background: linear-gradient(135deg, var(--background) 0%, #ffcccc 100%);
   min-height: 100vh;
   color: var(--text);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 @theme {
@@ -25,4 +28,26 @@ body {
 
 .font-dancing {
   font-family: 'Dancing Script', cursive;
+}
+
+/* Améliorations pour l'impression/capture */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Ajustements globaux pour mobile */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  .p-8 {
+    padding: 1rem;
+  }
 }
