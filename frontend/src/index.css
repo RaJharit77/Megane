@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #ff4d6d;
+  --secondary: #ff6b8b;
+  --accent: #ffd700;
+  --background: #ffe6e6;
+  --text: #5a3d5c;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, var(--background) 0%, #ffcccc 100%);
+  min-height: 100vh;
+  color: var(--text);
+}
+
+@theme {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-background: var(--background);
+  --color-text: var(--text);
+}
+
+.font-dancing {
+  font-family: 'Dancing Script', cursive;
+}
