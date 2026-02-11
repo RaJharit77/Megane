@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import FormSection from './components/FormSection'
 import ResultSection from './components/ResultSection'
 import Confetti from 'react-confetti'
+import { Toaster } from 'react-hot-toast'
 
 type Flower = {
   type: string
@@ -31,7 +32,7 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name })
       })
-      
+
       if (response.ok) {
         const data = await response.json()
         setFlower(data)
@@ -62,7 +63,7 @@ function App() {
 
       <div className="max-w-6xl mx-auto bg-white/95 rounded-3xl shadow-2xl shadow-pink-200/50 overflow-hidden">
         {/* Header */}
-        <motion.header 
+        <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center py-8 px-4 border-b-2 border-dashed border-secondary"
@@ -80,12 +81,12 @@ function App() {
         <main className="p-4 md:p-8">
           <AnimatePresence mode="wait">
             {!flower ? (
-              <FormSection 
+              <FormSection
                 onGenerate={handleGenerateFlower}
                 isGenerating={isGenerating}
               />
             ) : (
-              <ResultSection 
+              <ResultSection
                 flower={flower}
                 onReset={handleReset}
               />
@@ -112,6 +113,35 @@ function App() {
           </div>
         </footer>
       </div>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#fff',
+            color: '#5a3d5c',
+            boxShadow: '0 10px 25px -5px rgba(255,77,109,0.2)',
+            borderRadius: '12px',
+            padding: '16px',
+            fontSize: '14px',
+          },
+          success: {
+            icon: '✨',
+            style: {
+              border: '1px solid #ff4d6d',
+            },
+          },
+          error: {
+            icon: '❌',
+            style: {
+              border: '1px solid #e63946',
+            },
+          },
+          loading: {
+            icon: '⏳',
+          },
+        }}
+      />
     </div>
   )
 }

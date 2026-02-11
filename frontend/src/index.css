@@ -16,11 +16,11 @@ body {
 }
 
 @theme {
-  --color-primary: var(--primary);
-  --color-secondary: var(--secondary);
-  --color-accent: var(--accent);
-  --color-background: var(--background);
-  --color-text: var(--text);
+  --color-primary: #ff4d6d;
+  --color-secondary: #ff6b8b;
+  --color-accent: #ffd700;
+  --color-background: #ffe6e6;
+  --color-text: #5a3d5c;
 }
 
 .font-dancing {

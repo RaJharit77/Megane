@@ -170,6 +170,7 @@ export default function Flower3D({ flower }: Flower3DProps) {
             camera={{ position: [4, 2, 6], fov: 40 }}
             style={{ width: '100%', height: '100%', background: 'transparent' }}
             shadows
+            gl={{ preserveDrawingBuffer: true }}
             onCreated={({ gl }) => {
                 gl.shadowMap.enabled = true
                 gl.shadowMap.type = THREE.PCFSoftShadowMap
