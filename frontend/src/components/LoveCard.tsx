@@ -8,8 +8,7 @@ import Flower3D from './Flower3D'
 interface LoveCardProps {
     flower: {
         unique_id: string
-        realistic_image?: string
-        // autres propriétés nécessaires pour Flower3D
+        realistic_image?: string // conservé pour compatibilité, mais non utilisé
         petals: number
         color: string
         color_hex: string
@@ -21,13 +20,8 @@ export default function LoveCard({ flower, children }: LoveCardProps) {
     const cardRef = useRef<HTMLDivElement>(null)
     const [isExporting, setIsExporting] = useState<'image' | 'pdf' | null>(null)
 
-    // Bascule temporaire entre le canvas 3D et l'image statique pendant l'export
     const generateCard = async (format: 'image' | 'pdf') => {
         if (!cardRef.current) return
-        if (!flower.realistic_image) {
-            toast.error('Image de la fleur non disponible')
-            return
-        }
 
         const toastId = toast.loading(
             format === 'image' ? 'Préparation de l\'image HD...' : 'Génération du PDF...'
@@ -35,8 +29,9 @@ export default function LoveCard({ flower, children }: LoveCardProps) {
         setIsExporting(format)
 
         try {
-            // Petit délai pour que le DOM passe en mode export (remplacement image)
-            await new Promise(resolve => setTimeout(resolve, 100))
+            // Attendre que le rendu WebGL soit stable
+            await new Promise(resolve => setTimeout(resolve, 500))
+            await new Promise(requestAnimationFrame)
 
             const dataUrl = await toPng(cardRef.current, {
                 cacheBust: true,
@@ -75,7 +70,6 @@ export default function LoveCard({ flower, children }: LoveCardProps) {
 
     return (
         <div className="space-y-4">
-            {/* Carte à capturer */}
             <motion.div
                 ref={cardRef}
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -83,32 +77,19 @@ export default function LoveCard({ flower, children }: LoveCardProps) {
                 className="relative bg-linear-to-br from-pink-50 via-white to-rose-50 rounded-3xl shadow-2xl p-4 md:p-8 overflow-hidden"
                 style={{ boxShadow: '0 25px 50px -12px rgba(255,77,109,0.25)' }}
             >
-                {/* Éléments décoratifs (conservés) */}
                 <div className="absolute inset-0 pointer-events-none">
                     <div className="absolute top-0 left-0 w-64 h-64 bg-pink-200/20 rounded-full blur-3xl" />
                     <div className="absolute bottom-0 right-0 w-80 h-80 bg-rose-200/20 rounded-full blur-3xl" />
                 </div>
 
-                {/* Contenu principal : grille responsive */}
-                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-                    {/* Partie fleur – remplacement dynamique */}
+                {/* Grille : toujours une seule colonne */}
+                <div className="relative z-10 grid grid-cols-1 gap-6 md:gap-8">
+                    {/* Partie fleur */}
                     <div className="space-y-4">
                         <div className="bg-linear-to-br from-pink-50 to-white rounded-2xl p-4 md:p-6 shadow-lg">
-                            <div className="relative w-full aspect-square md:h-100">
-                                {isExporting && flower.realistic_image ? (
-                                    // Mode export : image statique
-                                    <img
-                                        src={flower.realistic_image}
-                                        alt="Fleur magique"
-                                        className="w-full h-full object-contain"
-                                    />
-                                ) : (
-                                    // Mode normal : canvas 3D
-                                    <Flower3D flower={flower} />
-                                )}
+                            <div className="relative w-full aspect-square md:aspect-auto md:h-auto">
+                                <Flower3D flower={flower} />
                             </div>
-
-                            {/* Badge "Fleur réaliste générée" */}
                             <div className="mt-4 md:mt-6 flex items-center justify-center gap-3 bg-pink-100/50 rounded-full py-2 md:py-3 px-4 md:px-6 border border-pink-200">
                                 <motion.div
                                     animate={{ scale: [1, 1.2, 1] }}
@@ -126,7 +107,6 @@ export default function LoveCard({ flower, children }: LoveCardProps) {
                     <div className="space-y-6">{children}</div>
                 </div>
 
-                {/* Cachet de cire */}
                 <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -147,9 +127,7 @@ export default function LoveCard({ flower, children }: LoveCardProps) {
                     {isExporting === 'image' ? (
                         <span className="animate-spin">⏳</span>
                     ) : (
-                        <>
-                            Télécharger en Image HD
-                        </>
+                        'Télécharger en Image HD'
                     )}
                 </button>
                 <button
@@ -160,9 +138,7 @@ export default function LoveCard({ flower, children }: LoveCardProps) {
                     {isExporting === 'pdf' ? (
                         <span className="animate-spin">⏳</span>
                     ) : (
-                        <>
-                            Télécharger en PDF
-                        </>
+                        'Télécharger en PDF'
                     )}
                 </button>
             </div>
