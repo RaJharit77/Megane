@@ -37,6 +37,11 @@ body {
   }
 }
 
+/* Classe pour masquer certains éléments pendant l'export (ex: canvas) */
+.no-export {
+  display: none !important;
+}
+
 /* Ajustements globaux pour mobile */
 @media (max-width: 640px) {
   h1 {
@@ -50,4 +55,9 @@ body {
   .p-8 {
     padding: 1rem;
   }
+}
+
+/* Ratio d'aspect pour la fleur en mobile */
+.aspect-square {
+  aspect-ratio: 1 / 1;
 }
