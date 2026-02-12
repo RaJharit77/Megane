@@ -78,7 +78,7 @@ export default function LoveCard({ flower, children }: LoveCardProps) {
                 ref={cardRef}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="relative bg-linear-to-br from-pink-50 via-white to-rose-50 rounded-3xl shadow-2xl p-4 md:p-8 overflow-hidden"
+                className="relative bg-linear-to-br from-pink-50 via-white to-rose-50 rounded-3xl shadow-2xl p-4 md:p-8 pb-20 md:pb-24 overflow-hidden"
                 style={{ boxShadow: '0 25px 50px -12px rgba(255,77,109,0.25)' }}
             >
                 <div className="absolute inset-0 pointer-events-none">
