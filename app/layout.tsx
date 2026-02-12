@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: 'Megane-Flow-Gen - Fleur Magique d\'Amour',
   description: 'Créez une fleur réaliste unique avec un message personnalisé pour votre être cher.',
   icons: {
-    icon: '/favicon.png',
+    icon: '/ico/favicon.png',
   },
 };
 
