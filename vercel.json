@@ -1,0 +1,31 @@
+{
+    "functions": {
+        "backend/app.py": {
+            "runtime": "python3.9",
+            "maxDuration": 10
+        }
+    },
+    "builds": [
+        {
+            "src": "frontend/**",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "dist"
+            }
+        },
+        {
+            "src": "backend/app.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "backend/app.py"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "frontend/dist/$1"
+        }
+    ]
+}
