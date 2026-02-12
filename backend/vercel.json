@@ -2,19 +2,24 @@
     "version": 2,
     "builds": [
         {
-            "src": "backend/app.py",
+            "src": "app.py",
             "use": "@vercel/python"
         }
     ],
     "routes": [
         {
             "src": "/api/(.*)",
-            "dest": "backend/app.py",
+            "dest": "app.py",
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-                "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Authorization"
+                "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Authorization",
+                "Access-Control-Max-Age": "86400"
             }
+        },
+        {
+            "src": "/(.*)",
+            "dest": "app.py"
         }
     ]
 }

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import FormSection from './components/FormSection'
 import ResultSection from './components/ResultSection'
 import Confetti from 'react-confetti'
-import { Toaster } from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 import { Analytics } from '@vercel/analytics/react';
 
 type Flower = {
@@ -28,23 +28,32 @@ function App() {
   const handleGenerateFlower = async (name: string) => {
     setIsGenerating(true)
     try {
-      const API_URL = import.meta.env.VITE_API_URL || '';
-      const url = API_URL ? `${API_URL}/api/generate_flower` : '/api/generate_flower';
+      const isDev = import.meta.env.DEV;
+      const API_BASE = isDev ? '' : (import.meta.env.VITE_API_URL || 'https://megane-gen-api.vercel.app');
+      const url = `${API_BASE}/api/generate_flower`;
+
+      console.log("Appel API vers:", url);
 
       const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify({ name })
       });
 
-      if (response.ok) {
-        const data = await response.json()
-        setFlower(data)
-        setShowConfetti(true)
-        setTimeout(() => setShowConfetti(false), 3000)
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP: ${response.status}`);
       }
+
+      const data = await response.json()
+      setFlower(data)
+      setShowConfetti(true)
+      setTimeout(() => setShowConfetti(false), 3000)
     } catch (error) {
-      console.error('Erreur:', error)
+      console.error('Erreur détaillée:', error)
+      toast.error("Erreur de connexion au serveur");
     } finally {
       setIsGenerating(false)
     }
