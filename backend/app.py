@@ -41,7 +41,7 @@ REALISTIC_COLORS = {
 def home():
     return "API is running correctly", 200
 
-@app.route('/api/generate_flower', methods=['POST', 'OPTIONS'])
+@app.route('/api/generate_flower', methods=['POST'])
 def generate_flower():
     if request.method == 'OPTIONS':
         return jsonify({}), 200
