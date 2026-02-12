@@ -1,13 +1,30 @@
 {
     "version": 2,
-    "rewrites": [
+    "builds": [
         {
-            "source": "/api/(.*)",
-            "destination": "/api/index.py"
+            "src": "backend/app.py",
+            "use": "@vercel/python",
+            "config": {
+                "maxLambdaSize": "15mb",
+                "runtime": "python3.12"
+            }
         },
         {
-            "source": "/(.*)",
-            "destination": "/frontend/dist/$1"
+            "src": "frontend/package.json",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "dist"
+            }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "backend/app.py"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "frontend/dist/$1"
         }
     ]
 }
