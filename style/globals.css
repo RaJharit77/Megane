@@ -1,0 +1,49 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #ff4d6d;
+  --color-secondary: #ff6b8b;
+  --color-accent: #ffd700;
+  --color-background: #ffe6e6;
+  --color-text: #5a3d5c;
+}
+
+@layer base {
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ffe6e6 0%, #ffcccc 100%);
+    min-height: 100vh;
+    color: #5a3d5c;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
+
+@layer utilities {
+  .font-dancing {
+    font-family: 'Dancing Script', cursive;
+  }
+  .wrap-break-word {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+}
+
+/* Impression */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Export */
+.no-export {
+  display: none !important;
+}
+
+/* Ratio carré pour la fleur */
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
