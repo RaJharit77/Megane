@@ -28,11 +28,14 @@ function App() {
   const handleGenerateFlower = async (name: string) => {
     setIsGenerating(true)
     try {
-      const response = await fetch('/api/generate_flower', {
+      const API_URL = import.meta.env.VITE_API_URL || '';
+      const url = API_URL ? `${API_URL}/api/generate_flower` : '/api/generate_flower';
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name })
-      })
+      });
 
       if (response.ok) {
         const data = await response.json()
