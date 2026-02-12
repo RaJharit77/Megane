@@ -8,7 +8,7 @@ import Flower3D from './Flower3D'
 interface LoveCardProps {
     flower: {
         unique_id: string
-        realistic_image?: string // conservé pour compatibilité, mais non utilisé
+        realistic_image?: string // conservé pour compatibilité, non utilisé
         petals: number
         color: string
         color_hex: string
@@ -30,7 +30,8 @@ export default function LoveCard({ flower, children }: LoveCardProps) {
 
         try {
             // Attendre que le rendu WebGL soit stable
-            await new Promise(resolve => setTimeout(resolve, 500))
+            await new Promise(resolve => setTimeout(resolve, 800))
+            await new Promise(requestAnimationFrame)
             await new Promise(requestAnimationFrame)
 
             const dataUrl = await toPng(cardRef.current, {
@@ -68,6 +69,13 @@ export default function LoveCard({ flower, children }: LoveCardProps) {
         }
     }
 
+    // Grille : 
+    // - en mode export : 1 colonne (vertical)
+    // - en mode site  : 1 colonne mobile, 2 colonnes desktop (fleur à gauche, détails à droite)
+    const gridClasses = isExporting
+        ? 'grid-cols-1'
+        : 'grid-cols-1 lg:grid-cols-2'
+
     return (
         <div className="space-y-4">
             <motion.div
@@ -82,12 +90,12 @@ export default function LoveCard({ flower, children }: LoveCardProps) {
                     <div className="absolute bottom-0 right-0 w-80 h-80 bg-rose-200/20 rounded-full blur-3xl" />
                 </div>
 
-                {/* Grille : toujours une seule colonne */}
-                <div className="relative z-10 grid grid-cols-1 gap-6 md:gap-8">
+                {/* Grille conditionnelle */}
+                <div className={`relative z-10 grid ${gridClasses} gap-6 md:gap-8`}>
                     {/* Partie fleur */}
                     <div className="space-y-4">
                         <div className="bg-linear-to-br from-pink-50 to-white rounded-2xl p-4 md:p-6 shadow-lg">
-                            <div className="relative w-full aspect-square md:aspect-auto md:h-auto">
+                            <div className="relative w-full aspect-square">
                                 <Flower3D flower={flower} />
                             </div>
                             <div className="mt-4 md:mt-6 flex items-center justify-center gap-3 bg-pink-100/50 rounded-full py-2 md:py-3 px-4 md:px-6 border border-pink-200">
