@@ -1,4 +1,4 @@
-# 🌸 Megane – Fleur Magique d’Amour
+# 🌸 Megane
 
 <div align="center">
   <p><strong>Communicate any way any how</strong></p>
