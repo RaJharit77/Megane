@@ -6,24 +6,16 @@
             "config": {
                 "distDir": "dist"
             }
-        },
-        {
-            "src": "./backend/app.py",
-            "use": "@vercel/python",
-            "config": {
-                "maxDuration": 10,
-                "runtime": "python3.9"
-            }
         }
     ],
     "routes": [
         {
             "src": "/api/(.*)",
-            "dest": "./backend/app.py"
+            "dest": "api/app.py"
         },
         {
             "src": "/(.*)",
-            "dest": "./frontend/dist/$1"
+            "dest": "frontend/dist/$1"
         }
     ]
 }
