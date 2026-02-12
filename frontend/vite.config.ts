@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://megane-gen-api.vercel.app',
+        target: 'https://megane-flow-gen-api.vercel.app',
         changeOrigin: true,
       }
     }
