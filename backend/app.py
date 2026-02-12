@@ -8,11 +8,8 @@ import io
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance, ImageChops
 import base64
 import numpy as np
-from mangum import Mangum # type: ignore
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
-
-handler = Mangum(app)
 
 CORS(app)
 
