@@ -2,6 +2,14 @@
   "name": "megane",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"cd backend && python app.py\" \"cd frontend && npm run dev\"",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm run preview"
+  },
   "devDependencies": {
     "concurrently": "^8.2.0"
   }
