@@ -4,6 +4,7 @@ import FormSection from './components/FormSection'
 import ResultSection from './components/ResultSection'
 import Confetti from 'react-confetti'
 import { Toaster } from 'react-hot-toast'
+import { Analytics } from '@vercel/analytics/react';
 
 type Flower = {
   type: string
@@ -142,6 +143,7 @@ function App() {
           },
         }}
       />
+      <Analytics />
     </div>
   )
 }
