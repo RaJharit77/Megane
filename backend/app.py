@@ -11,7 +11,11 @@ import numpy as np
 
 app = Flask(__name__)  
 
-CORS(app, origins=["https://megane-flow-gen.vercel.app", "http://localhost:5173"])
+CORS(app,
+        origins=["https://megane-flow-gen.vercel.app", "http://localhost:5173"],
+        methods=["GET", "POST", "OPTIONS"],
+        allow_headers=["Content-Type", "Authorization"],
+        supports_credentials=True)
 
 # Messages d'amour améliorés
 FLOWER_MESSAGES = [
