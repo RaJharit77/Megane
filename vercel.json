@@ -6,10 +6,6 @@
             "config": {
                 "distDir": "dist"
             }
-        },
-        {
-            "src": "api/index.py",
-            "use": "@vercel/python"
         }
     ],
     "routes": [
